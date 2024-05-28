@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard</title>
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet"> 
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link href="/css/dashboard.css" rel="stylesheet">
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <!-- jQuery UI -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <style>
+        #loader-wrapper {
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background-color: rgba(0, 0, 0, 0.8); /* Light black background */
+              display: flex;
+              justify-content: center;
+              align-items: center;
+              z-index: 1000;
+            }
+        
+            .loader {
+              display: flex;
+              justify-content: space-around;
+              width: 60px;
+            }
+        
+            .dot {
+              width: 15px;
+              height: 15px;
+              background-color: white;
+              border-radius: 50%;
+              animation: blink 1.4s infinite both;
+            }
+        
+            .dot:nth-child(1) {
+              animation-delay: 0s;
+            }
+        
+            .dot:nth-child(2) {
+              animation-delay: 0.2s;
+            }
+        
+            .dot:nth-child(3) {
+              animation-delay: 0.4s;
+            }
+        
+            @keyframes blink {
+              0%, 80%, 100% {
+                opacity: 0;
+              }
+              40% {
+                opacity: 1;
+              }
+            }
+        
+        </style>
+        
+          </head>
+        <body>
+        <div id="loader-wrapper">
+            <div class="loader">
+              <div class="dot"></div>
+              <div class="dot"></div>
+              <div class="dot"></div>
+            </div>
+          </div>
+    <div class="sidebar">
+        <div class="logo"></div>
+        <ul class="menu">
+            <li>
+                <a href="/provider/dashboard">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="/provider/profile">
+                    <i class="fas fa-user"></i>
+                    <span>Profile</span>
+                </a>
+            </li>
+            <li>
+                <a href="/provider/statistics">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>In Progress Jobs</span>
+                </a>
+            </li>
+            <li>
+                
+                <li>
+                    <a href="/provider/completejob">
+                        <i class="fas fa-star"></i>
+                        <span>Complete Jobs</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="/provider/assignJobs">
+                        <i class="fas fa-star"></i>
+                        <span>Suggested Jobs</span>
+                    </a>
+                </li>
+            </ul>
+        <ul class="menu">
+            <li class="logout"><a href="/signout"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+        </ul>
+    </div>
+    <div class="main--content">
+        <div class="header--wrapper">
+            <div class="header--title">
+                <h2>Dashboard</h2>
+            </div>
+            
+        </div>
+        <div class="card--container">
+            <h3 class="main--title">Invoices and Payments</h3>
+            <div class="card--wrapper">
+                <div class="payment--card light-red">
+                    <div class="card--header">
+                        <div class="amount">
+                            <span class="title">Recieve Amount</span>
+                            <span class="amount-value">PKR <%= rec %></span>
+                        </div>
+                        <i class="fas fa-dollar-sign icon"></i>
+                    </div>
+                    <span class="card-detail">**** **** **** ****</span>
+                </div>
+                <div class="payment--card light-pruple">
+                    <div class="card--header">
+                        <div class="amount">
+                            <span class="title">Complete Amount Services</span>
+                            <span class="amount-value"><%= comp %></span>
+                        </div>
+                        <i class="fas fa-list icon dark-purple"></i>
+                    </div>
+                    <span class="card-detail">**** **** **** ****</span>
+                </div>
+                <div class="payment--card light-green">
+                    <!-- Third payment card content -->
+                    <div class="card--header">
+                        <div class="amount">
+                            <span class="title">Pending Amount</span>
+                            <span class="amount-value">PKR <%= pend %></span>
+                        </div>
+                        <i class="fas fa-dollar-sign icon"></i>
+                    </div>
+                    <span class="card-detail">**** **** **** ****</span>
+                </div>
+                <div class="payment--card light-blue">
+                    <!-- Fourth payment card content -->
+                    <div class="card--header">
+                        <div class="amount">
+                            <span class="title">Pending Amount Services</span>
+                            <span class="amount-value"><%= pendS %></span>
+                        </div>
+                        <i class="fas fa-check-circle icon dark-blue"></i>
+                    </div>
+                    <span class="card-detail">**** **** **** ****</span>
+                </div>
+            </div>
+        </div>
+       
+    </div>
+
+    <script>
+        // JavaScript code to toggle visibility of additional rows
+        document.addEventListener("DOMContentLoaded", function() {
+            var financeTable = document.getElementById("financeTable");
+            var showMoreLink = document.getElementById("showMoreLink");
+            var rows = financeTable.getElementsByTagName("tbody")[0].getElementsByTagName("tr");
+            var visibleRowCount = 5;
+            var totalRows = rows.length;
+
+            // Function to toggle visibility of additional rows
+            function toggleRows() {
+                for (var i = visibleRowCount; i < totalRows; i++) {
+                    rows[i].style.display = (rows[i].style.display === "none") ? "" : "none";
+                }
+                showMoreLink.textContent = (showMoreLink.textContent === "Show more") ? "Show less" : "Show more";
+            }
+
+            // Initial setup to hide additional rows
+            for (var i = visibleRowCount; i < totalRows; i++) {
+                rows[i].style.display = "none";
+            }
+
+            // Event listener for show more link
+            showMoreLink.addEventListener("click", function(event) {
+                event.preventDefault();
+                toggleRows();
+            });
+        });
+    </script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+          setTimeout(function() {
+            document.getElementById('loader-wrapper').style.display = 'none';
+            document.getElementById('content').style.display = 'block';
+          }, 1000); // Adjust the timeout duration as needed
+        });
+      </script>
+</body>
+</html>

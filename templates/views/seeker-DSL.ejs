@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shortlist Workers</title>
+    <!--Google Font-->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@300&display=swap" rel="stylesheet"> 
+    <!--Bootstrap-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+     <!--CSS-->
+     <script src='https://kit.fontawesome.com/a076d05399.js' crossorigin='anonymous'></script>
+     <link href="/css/seeker-DJR.css" rel="stylesheet" >
+     <style>
+      #loader-wrapper {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8); /* Light black background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+          }
+      
+          .loader {
+            display: flex;
+            justify-content: space-around;
+            width: 60px;
+          }
+      
+          .dot {
+            width: 15px;
+            height: 15px;
+            background-color: white;
+            border-radius: 50%;
+            animation: blink 1.4s infinite both;
+          }
+      
+          .dot:nth-child(1) {
+            animation-delay: 0s;
+          }
+      
+          .dot:nth-child(2) {
+            animation-delay: 0.2s;
+          }
+      
+          .dot:nth-child(3) {
+            animation-delay: 0.4s;
+          }
+      
+          @keyframes blink {
+            0%, 80%, 100% {
+              opacity: 0;
+            }
+            40% {
+              opacity: 1;
+            }
+          }
+          .star {
+            color: gold;
+            font-size: 24px;
+        }
+        .star.gray {
+            color: lightgray;
+        }
+      
+      </style>
+      
+        </head>
+      <body>
+      <div id="loader-wrapper">
+          <div class="loader">
+            <div class="dot"></div>
+            <div class="dot"></div>
+            <div class="dot"></div>
+          </div>
+        </div>
+    
+    <!--Navigation Bar-->
+    <%- include('seeker-navigation.ejs') %>
+
+
+    <% if(providers.length == 0) { %>
+        <h3 class="unknown"><b>No workers has been shortlisted yet...</b></h3>
+        <% } else { %>
+            <h3 class="known"><b>Shortlist Workers (<%= providers.length %>)</b></h3>
+            <% for (var x = 0; x < providers.length; x++) { %>
+            <div class="card">
+  <div class="header">
+    <img src="./../../uploads/<%= providers[x]["profilePicture"] %>" alt="Profile Photo">
+    <h3><%= providers[x]["fullname"] %></h3>
+    <p>Gender: <%= providers[x]["gender"] %></p>
+  </div>
+  <div class="body">
+    <div class="details-row">
+      <div class="detail">
+        <h4 class="fs-5 fw-bold">Email</h4>
+        <p><%= providers[x]["email"] %></p>
+      </div>
+      <div class="detail">
+        <h4 class="fs-5 fw-bold">CNIC</h4>
+        <p><%= providers[x]["cnic"] %></p>
+      </div>
+    </div>
+    <div class="details-row">
+      <div class="detail">
+        <h4 class="fs-5 fw-bold">Skill</h4>
+        <% var ax = "" ; for(let i = 0; i < xv.length; i++){ %>
+        <% if(xv[i]["prov_mail"] ==  providers[x]["email"]) { %>
+        <p><%= xv[i]["skill"] %></p>
+        <% ax = xv[i]["skill"]}} %>
+      </div>
+      <div class="detail">
+        <h4 class="fs-5 fw-bold">Home Town</h4>
+        <p><%= providers[x]["hometown"] %></p>
+      </div>
+    </div>
+    <div class="details-row">
+      <div class="detail">
+        <h4 class="fs-5 fw-bold">Phone No</h4>
+        
+        <p><%= providers[x]["phoneNo"] %></p>
+        
+      </div>
+      <div class="detail">
+        <h4 class="fs-5 fw-bold">Rating</h4>
+        <div class="rating">
+          <% var arr =  providers[x]["rating"]; var rat = 0; for(let g = 0 ; g < arr.length;g++){ rat += arr[g] } rat = rat/arr.length; rat = Math.ceil(rat)%>
+          <% for(let i = 1; i <= 5; i++) { %>
+              <% if (i <= rat) { %>
+                  <span class="star">&#9733;</span>
+              <% } else { %>
+                  <span class="star gray">&#9733;</span>
+              <% } %>
+          <% } %>
+      </div>
+      </div>
+    </div>
+    <div class="details-row">
+      <% for(let k = 0 ; k < data.length; k++){ %>
+          <% if(data[k].id == providers[x]["_id"]){ %>
+          <div class="detail">
+            <h4 class="fs-5 fw-bold">Services Completed</h4>
+            <p><%= data[k].comp %></p>
+          </div>
+          <div class="detail">
+            <h4 class="fs-5 fw-bold">Services In Progress</h4>
+            <p><%= data[k].prog %></p>
+          </div>
+        <% } }%>
+        </div>
+    <div class="details">
+        <h4 class="fs-5 fw-bold">About</h4>
+      <p><%= providers[x]["about"] %></p>
+    </div>
+    
+    <div class="details-row">
+      <div class="detail">
+        <a href="/seeker/jobAssign?skill=<%=ax%>&provEmail=<%=providers[x]["email"]%>&gen=<%= providers[x]["gender"] %>"><button style="background: blue;" class="apply-btn"><b>Assign job</b></button></a>
+        </a>
+            </div>
+            <div style = "margin-top: 15px;" class="detail">
+              <a href="/chat?seekerID=<%= seekerID %>&providerID=<%=providers[x]["_id"]%>">
+                <img src="/images/cmt.svg" width="40"></i>
+              </a>
+                  </div>
+      <div class="detail">
+        <a href="/seeker/deleteShortlistedAssign?email=<%=providers[x]["email"]%>"><button style="background: red;" class="apply-btn"><b>Ignore</b></button></a>
+    </div>
+
+    </div>
+  </div>
+</div>
+        <%}}%>
+
+
+
+<!--Footer-->
+
+
+<%- include('seeker-footer.ejs') %>  
+   
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        setTimeout(function() {
+          document.getElementById('loader-wrapper').style.display = 'none';
+          document.getElementById('content').style.display = 'block';
+        }, 1000); // Adjust the timeout duration as needed
+      });
+    </script>
+</body>
+</html>
