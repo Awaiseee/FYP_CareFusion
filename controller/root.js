@@ -28,7 +28,7 @@ const signupAction = async (req, res) => {
     }
     req.session.user = name;
     req.session.email = emailId;
-    res.redirect("/services/services");
+    res.redirect("/login");
   } else {
     var message = "Username or Email already exists";
     const redirectUrl = "/signup?message=" + encodeURIComponent(message);
@@ -46,7 +46,6 @@ const loginAction = async (req, res) => {
   // console.log(user)
   let alreadyProv= false;
   if (user.length != 0) {
-    console.log("FSDG", user[0].signedUpAs);
     if(user[0].signedUpAs === "Service Seeker"){
       let profileImage = "";
       req.session.user = user[0].fullname;
@@ -60,7 +59,7 @@ const loginAction = async (req, res) => {
     else{
       const prov = await provProfile.findOne({email: user[0].email});
       let profileImage = "";
-      console.log("blo", prov.blocked);
+      if (prov){
       if(!prov.blocked) {
         req.session.user = user[0].fullname;
         req.session.email = user[0].email;
@@ -84,6 +83,16 @@ const loginAction = async (req, res) => {
    else{
     res.render("block");
   }
+ }else{
+  console.log("sadar");
+    req.session.user = user[0].fullname;
+    req.session.email = user[0].email;
+    req.session.signUpAs = user[0].signedUpAs;
+    res.render("home", {
+      user: req.session.signUpAs,
+      profileImage: profileImage,
+    });
+ }
   // console.log(req.session.user, "  ", req.session.email);
    
    }
@@ -106,7 +115,7 @@ const signOut = (req, res) => {
       console.error("Error destroying session:", err);
       res.status(500).send("Internal Server Error");
     } else {
-      res.redirect("/"); // Redirect to the home page
+      res.redirect("/"); // Redirecting to home page
     }
   });
 };

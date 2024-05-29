@@ -50,7 +50,7 @@ async function addShortList(category, email) {
     .then((data) => {
       if (data["login"]) {
         var message = data["message"];
-        window.location.href = `http://localhost:3302/login?message=${message}`; // must update according to port number
+        window.location.href = `/login?message=${message}`; // must update according to port number
       } else {
         console.log("");
       }
@@ -97,7 +97,7 @@ async function showShortlisted() {
     .then((data) => {
       if (data["login"]) {
         var message = data["message"];
-        window.location.href = `http://localhost:3302/login?message=${message}`; // must update according to port number
+        window.location.href = `/login?message=${message}`; // must update according to port number
       } else {
         var text = `<h2>My Shortlisted</h2><div style="text-align: right;">
     <a href="/seeker/findWorker"><button style="background-color: #3498db; color: #fff; padding: 10px 20px; border-radius: 10px;">Find Another Worker</button></a>
