@@ -243,7 +243,12 @@ const forgetPassword = async (req, res) => {
 const chatView = async (req,res)=>{
   const { seekerID, providerID } = req.query;
   const user = await signup.findOne({ fullname: req.session.user });
-  if(user.signedUpAs === 'Service Seeker') {
+  console.log("in root", providerID);
+  console.log("signup", user);
+  console.log("useroutside", user._id);
+
+  if(user && user.signedUpAs === 'Service Seeker') {
+    console.log("user", user._id);
     res.render('chat', { seekerID:user._id, providerID,uname: req.session.user });
   }else {
     res.render('chat', { seekerID: providerID, providerID: seekerID,uname: req.session.user });

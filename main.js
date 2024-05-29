@@ -96,10 +96,10 @@ app.get("/*",(req,res)=>{
     console.log("Connected......");
 
     socket.on('joinRoom', async ({ seekerID, providerID }) => {
-        socket.join(seekerID);
-        socket.join(providerID);
-
-        // Load previous chat messages
+        const room = `${seekerID}-${providerID}`;
+        socket.join(room);
+        console.log(`Socket ${socket.id} joined room ${room}`);
+        console.log("prov", providerID)
         let chat = await chatMessage.findOne({
             $or: [
                 { senderId: seekerID, receiverId: providerID },
@@ -116,8 +116,6 @@ app.get("/*",(req,res)=>{
 
     socket.on('message', async (msg) => {
         try {
-            // create a chat based on sender and receiver
-            console.log('Received message:', msg); 
             let chat = await chatMessage.findOne({
                 $or: [
                     { senderId: msg.sender, receiverId: msg.receiver },
@@ -126,11 +124,10 @@ app.get("/*",(req,res)=>{
             });
 
             if (!chat) {
-                // Create  new chat if it doesn't exist
                 chat = new chatMessage({
                     senderId: msg.sender,
                     receiverId: msg.receiver,
-                    msgs: [] // Initialize empty msgs array
+                    msgs: []
                 });
             }
 
@@ -139,21 +136,18 @@ app.get("/*",(req,res)=>{
                 content: msg.message,
                 timestamp: new Date()
             };
-            console.log('New message:', newMessage);
 
-            // push the new message to the msgs array in the chat
             chat.msgs.push(newMessage);
-
             await chat.save();
 
-            // Emit the message to both sender and receiver
-            socket.to(msg.sender).to(msg.receiver).emit('message', newMessage);
+            const room = `${msg.sender}-${msg.receiver}`;
+            socket.to(room).emit('message', newMessage);
+            socket.to(`${msg.receiver}-${msg.sender}`).emit('message', newMessage);
         } catch (error) {
             console.error("Error in saving message ", error);
         }
     });
 });
-
 // adding port and database connection
 const start = async () =>{
     try{
